@@ -1,5 +1,4 @@
-// create-event.dto.ts
-import { IsNotEmpty, IsString, IsDateString } from 'class-validator';
+import { IsNotEmpty, IsString, IsInt } from 'class-validator';
 
 export class CreateEventDto {
   @IsNotEmpty()
@@ -7,10 +6,28 @@ export class CreateEventDto {
   summary: string;
 
   @IsNotEmpty()
-  @IsDateString()
-  startDateTime: string;
+  @IsInt()
+  year: number;
 
   @IsNotEmpty()
-  @IsDateString()
-  endDateTime: string;
+  @IsInt()
+  month: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  day: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  hour: number;
+
+  @IsInt()
+  minute: number;
+
+  @IsInt()
+  second: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  utcCode: number;
 }

@@ -1,6 +1,6 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
-import { AuthGuard } from '@nestjs/passport';
+import * as requestIp from 'request-ip';
 
 @Controller('google')
 export class AppController {
@@ -8,6 +8,7 @@ export class AppController {
 
   @Get('redirect')
   googleAuthRedirect(@Req() req) {
+    // const userIpAddress = requestIp.getClientIp(req);
     return this.appService.googleLogin(req);
   }
 }

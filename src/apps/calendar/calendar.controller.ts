@@ -14,11 +14,13 @@ import { CreateEventDto } from './dto/calendar.dto';
 @Controller('calendar')
 export class CalendarController {
   constructor(private readonly googleEventService: CalendarService) {}
+
   @Get('auth')
   async createGoogleCalendar(@Res() res: Response) {
-    const authUrl = this.googleEventService.createUrl();
-    res.redirect(await authUrl);
+    const authUrl = (await this.googleEventService.createUrl()) as string;
+    res.redirect(authUrl);
   }
+
   @Post('create-event')
   async createEventPost(@Body() eventData: CreateEventDto) {
     try {

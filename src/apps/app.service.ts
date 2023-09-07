@@ -7,6 +7,5 @@ export class AppService {
   constructor(private readonly calendarService: CalendarService) {}
   async googleLogin(req) {
     const data = await this.calendarService.getTokenAndLoggin(req.query.code);
-    console.log(data);
   }
 }
