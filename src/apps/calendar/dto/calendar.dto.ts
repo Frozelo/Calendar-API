@@ -7,27 +7,45 @@ export class CreateEventDto {
 
   @IsNotEmpty()
   @IsInt()
-  year: number;
+  startYear: number;
 
   @IsNotEmpty()
   @IsInt()
-  month: number;
+  startMonth: number;
 
   @IsNotEmpty()
   @IsInt()
-  day: number;
+  startDay: number;
 
   @IsNotEmpty()
   @IsInt()
-  hour: number;
+  startHour: number;
 
   @IsInt()
-  minute: number;
+  startMinute: number;
 
   @IsInt()
-  second: number;
+  startSecond: number;
 
   @IsNotEmpty()
   @IsInt()
-  utcCode: number;
+  endYear: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  endMonth: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  endDay: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  endHour: number;
+
+  @IsInt()
+  endMinute: number;
+
+  @IsInt()
+  endSecond: number;
 }

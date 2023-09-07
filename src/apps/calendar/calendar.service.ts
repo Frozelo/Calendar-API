@@ -53,30 +53,27 @@ export class CalendarService {
   createEventPost(eventData: CreateEventDto) {
     return new Promise(async (resolve, reject) => {
       try {
-        const startDateTime =
-          `${eventData.year}-${eventData.month
-            .toString()
-            .padStart(2, '0')}-${eventData.day.toString().padStart(2, '0')}T` +
-          `${eventData.hour.toString().padStart(2, '0')}:${eventData.minute
-            .toString()
-            .padStart(2, '0')}:00` +
-          `${eventData.utcCode >= 0 ? '+' : '-'}${Math.abs(eventData.utcCode)
-            .toString()
-            .padStart(2, '0')}:00`;
-        const endDateTime =
-          `${eventData.year}-${eventData.month.toString().padStart(2, '0')}-${(
-            eventData.day + 1
-          )
-            .toString()
-            .padStart(2, '0')}T` +
-          `${(eventData.hour + 1)
-            .toString()
-            .padStart(2, '0')}:${eventData.minute
-            .toString()
-            .padStart(2, '0')}:00` +
-          `${eventData.utcCode >= 0 ? '+' : '-'}${Math.abs(eventData.utcCode)
-            .toString()
-            .padStart(2, '0')}:00`;
+        const moment = require('moment-timezone');
+        const startDateTime = moment.tz(
+          {
+            year: eventData.startYear,
+            month: eventData.startMonth - 1,
+            day: eventData.startDay,
+            hour: eventData.startHour,
+            minute: eventData.startMinute,
+          },
+          'Europe/Moscow',
+        );
+        const endDateTime = moment.tz(
+          {
+            year: eventData.endYear,
+            month: eventData.endMonth - 1,
+            day: eventData.endDay,
+            hour: eventData.endHour,
+            minute: eventData.endMinute,
+          },
+          'Europe/Moscow',
+        );
         const calendar = google.calendar({
           version: 'v3',
           auth: this.googleService,
@@ -88,10 +85,12 @@ export class CalendarService {
           requestBody: {
             summary: eventData.summary,
             start: {
-              dateTime: startDateTime,
+              dateTime: startDateTime.toISOString(),
+              timeZone: 'Europe/Moscow',
             },
             end: {
-              dateTime: endDateTime,
+              dateTime: endDateTime.toISOString(),
+              timeZone: 'Europe/Moscow',
             },
           },
         });
