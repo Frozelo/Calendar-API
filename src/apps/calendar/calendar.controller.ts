@@ -21,6 +21,12 @@ export class CalendarController {
     res.redirect(authUrl);
   }
 
+  @Get('summary')
+  async getCalendarNames() {
+    const calendarNames = await this.googleEventService.getCalendarNames();
+    return calendarNames;
+  }
+
   @Post('create-event')
   async createEventPost(@Body() eventData: CreateEventDto) {
     try {

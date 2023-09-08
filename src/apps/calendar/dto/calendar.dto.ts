@@ -5,6 +5,19 @@ export class CreateEventDto {
   @IsString()
   summary: string;
 
+  @IsString()
+  description: string;
+
+  @IsNotEmpty()
+  @IsString()
+  eventType: string;
+
+  @IsString()
+  location: string;
+
+  @IsString()
+  colorId: string;
+
   @IsNotEmpty()
   @IsInt()
   startYear: number;

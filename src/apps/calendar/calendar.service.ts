@@ -49,6 +49,28 @@ export class CalendarService {
       }
     });
   }
+  createCalendarClient() {
+    return google.calendar({
+      version: 'v3',
+      auth: this.googleService,
+    });
+  }
+
+  getCalendarNames() {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const calendar = this.createCalendarClient();
+        const calendarListResponse = await calendar.calendarList.list();
+        // const calendarNames = calendarListResponse.data.items.map(
+        //   (item) => item.summary,
+        // );
+        resolve(calendarListResponse);
+      } catch (error) {
+        console.error('Error while getting calendar names:', error.message);
+        reject(error);
+      }
+    });
+  }
 
   createEventPost(eventData: CreateEventDto) {
     return new Promise(async (resolve, reject) => {
@@ -74,16 +96,18 @@ export class CalendarService {
           },
           'Europe/Moscow',
         );
-        const calendar = google.calendar({
-          version: 'v3',
-          auth: this.googleService,
-        });
+        const calendar = this.createCalendarClient();
 
         const eventResponse = await calendar.events.insert({
-          calendarId: 'primary',
+          calendarId:
+            '3cc4ceea284a3a874d89d641ad3251da939f4b54c250ffdfc35c2930a23d6e3c@group.calendar.google.com',
           auth: this.googleService,
           requestBody: {
             summary: eventData.summary,
+            description: eventData.description,
+            eventType: eventData.eventType,
+            location: eventData.location,
+            colorId: eventData.colorId,
             start: {
               dateTime: startDateTime.toISOString(),
               timeZone: 'Europe/Moscow',
