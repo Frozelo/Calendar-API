@@ -1,23 +1,40 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  Get,
+  Req,
+  UseGuards,
+  Res,
+  Post,
+} from '@nestjs/common';
 import { CalendarService } from './calendar.service';
-import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
-import { CreateEventDto } from './dto/create-event-dto';
+import { Response } from 'express';
+import { CreateEventDto } from './dto/calendar.dto';
 
 @Controller('calendar')
 export class CalendarController {
-  constructor(private readonly calendarService: CalendarService) {}
+  constructor(private readonly googleEventService: CalendarService) {}
 
-  @ApiOperation({ summary: 'Get all events', description: 'Retrieve a list of all events.' })
-  @Get()
-  async getAllEvents() {
-    const events = await this.calendarService.getAllEvents();
-    return events;
+  @Get('auth')
+  async createGoogleCalendar(@Res() res: Response) {
+    const authUrl = (await this.googleEventService.createUrl()) as string;
+    res.redirect(authUrl);
   }
-  @ApiOperation({ summary: 'Create an event', description: 'Create a new event.' })
-  @ApiBody({ type: CreateEventDto })
-  @Post()
-  async createEvent(@Body() eventData: CreateEventDto) {
-    const createdEvent = await this.calendarService.createEvent(eventData);
-    return createdEvent;
+
+  @Get('summary')
+  async getCalendarNames() {
+    const calendarNames = await this.googleEventService.getCalendarNames();
+    return calendarNames;
+  }
+
+  @Post('create-event')
+  async createEventPost(@Body() eventData: CreateEventDto) {
+    try {
+      const createdEvent =
+        await this.googleEventService.createEventPost(eventData);
+      return createdEvent;
+    } catch (error) {
+      return { error: 'An error occurred while creating the event.' };
+    }
   }
 }
