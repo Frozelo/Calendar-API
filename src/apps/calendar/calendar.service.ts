@@ -10,6 +10,14 @@ export class CalendarService {
     clientSecret: process.env.CLIENT_SECRET,
     redirectUri: process.env.REDIRECT_URI,
   });
+
+  private readonly calendar: calendar_v3.Calendar;
+  constructor() {
+    this.calendar = google.calendar({
+      version: 'v3',
+      auth: this.googleService,
+    });
+  }
   createUrl() {
     return new Promise(async (resolve, reject) => {
       try {
@@ -49,18 +57,11 @@ export class CalendarService {
       }
     });
   }
-  createCalendarClient() {
-    return google.calendar({
-      version: 'v3',
-      auth: this.googleService,
-    });
-  }
 
   getCalendarNames() {
     return new Promise(async (resolve, reject) => {
       try {
-        const calendar = this.createCalendarClient();
-        const calendarListResponse = await calendar.calendarList.list();
+        const calendarListResponse = await this.calendar.calendarList.list();
         // const calendarNames = calendarListResponse.data.items.map(
         //   (item) => item.summary,
         // );
@@ -96,9 +97,8 @@ export class CalendarService {
           },
           'Europe/Moscow',
         );
-        const calendar = this.createCalendarClient();
 
-        const eventResponse = await calendar.events.insert({
+        const eventResponse = await this.calendar.events.insert({
           calendarId:
             '3cc4ceea284a3a874d89d641ad3251da939f4b54c250ffdfc35c2930a23d6e3c@group.calendar.google.com',
           auth: this.googleService,
